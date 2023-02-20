@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33403.182
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForegroundShapesDetector.Library", "ForegroundShapesDetector.Library\ForegroundShapesDetector.Library.csproj", "{B68437BC-92FB-4919-9C3C-E60C4314F3FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForegroundShapesDetector.Tests", "ForegroundShapesDetector.Tests\ForegroundShapesDetector.Tests.csproj", "{42793329-20F2-432C-BD00-65B6270C88CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForegroundShapesDetector.ConsoleClient", "ForegroundShapesDetector.ConsoleClient\ForegroundShapesDetector.ConsoleClient.csproj", "{36CB3F10-89F3-47D7-8357-65A6F66AE87F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B68437BC-92FB-4919-9C3C-E60C4314F3FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B68437BC-92FB-4919-9C3C-E60C4314F3FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B68437BC-92FB-4919-9C3C-E60C4314F3FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B68437BC-92FB-4919-9C3C-E60C4314F3FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42793329-20F2-432C-BD00-65B6270C88CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42793329-20F2-432C-BD00-65B6270C88CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42793329-20F2-432C-BD00-65B6270C88CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42793329-20F2-432C-BD00-65B6270C88CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36CB3F10-89F3-47D7-8357-65A6F66AE87F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36CB3F10-89F3-47D7-8357-65A6F66AE87F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36CB3F10-89F3-47D7-8357-65A6F66AE87F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36CB3F10-89F3-47D7-8357-65A6F66AE87F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B75C79B7-9E91-489F-8A8C-08F6CB39878F}
+	EndGlobalSection
+EndGlobal
