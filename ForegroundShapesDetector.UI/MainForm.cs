@@ -16,7 +16,7 @@ namespace ForegroundShapesDetector.UI
 
         private void MainForm_Paint(object sender, PaintEventArgs e)
         {
-            CoordinateSystem coordinateSystem = new CoordinateSystem();
+
         }
     }
 }

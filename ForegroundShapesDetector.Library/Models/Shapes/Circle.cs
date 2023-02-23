@@ -1,8 +1,8 @@
-﻿using ForegroundShapesDetector.Library.Models.Interfaces;
+﻿using ForegroundShapesDetector.Library.Models.Abstractions;
 
 namespace ForegroundShapesDetector.Library.Models.Shapes
 {
-    public class Circle : IShape
+    public class Circle : ShapeBase
     {
         private Point center;
         private double radius;
@@ -16,7 +16,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
         public Point Center
         {
             get { return center; }
-            set
+            private set
             {
                 if (value is null)
                     throw new ArgumentNullException("Circle's center point can't be null");
@@ -27,7 +27,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
         public double Radius
         {
             get { return radius; }
-            set
+            private set
             {
                 if (value <= 0)
                     throw new ArgumentOutOfRangeException("Circle's radius must be greater than 0");
@@ -35,9 +35,21 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
             }
         }
 
-        public double GetArea()
+        public override double GetArea()
         {
             return Math.PI * Math.Pow(Radius, 2);
         }
+
+        protected sealed override bool WithLineSegment(LineSegment line)
+            => ShapesOverlapHelper.CircleWithLineSegment(line, this);
+
+        protected sealed override bool WithTriangle(Triangle triangle)
+            => ShapesOverlapHelper.CircleWithTriangle(this, triangle);
+
+        protected sealed override bool WithRectangle(Rectangle rectangle)
+            => ShapesOverlapHelper.CircleWithRectangle(this, rectangle);
+
+        protected sealed override bool WithCircle(Circle circle)
+            => ShapesOverlapHelper.CircleWithCircle(this, circle);
     }
 }
