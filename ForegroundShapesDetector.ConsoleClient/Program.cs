@@ -1,4 +1,5 @@
-﻿using ForegroundShapesDetector.Library;
+﻿using ForegroundShapesDetector.DataGenerator;
+using ForegroundShapesDetector.Library;
 using ForegroundShapesDetector.Library.Models;
 using ForegroundShapesDetector.Library.Models.Abstractions;
 using ForegroundShapesDetector.Library.Models.Shapes;
@@ -9,6 +10,22 @@ namespace ForegroundShapesDetector.ConsoleClient
     {
         static async Task Main(string[] args)
         {
+            var generatedShapes = ShapesGenerator.GetGeneratedShapes(20).ToList();
+
+            var resultSyncForGen = ShapesDetector.GetForegroundShapesSync(generatedShapes);
+
+            Point k1 = new Point(5, 5);
+            Point k2 = new Point(5, 5);
+
+            try
+            {
+                ShapeBase shape = new LineSegment(k1, k2);
+            }
+            catch (Exception)
+            {
+
+            }
+
             Point a1 = new Point(5, 8);
             Point a2 = new Point(8, 10);
             ShapeBase line1 = new LineSegment(a1, a2);
