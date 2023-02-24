@@ -8,16 +8,17 @@ namespace ForegroundShapesDetector.Library.Models.Abstractions
         {
             return shape switch
             {
-                LineSegment l => WithLineSegment(l),
-                Triangle t => WithTriangle(t),
-                Rectangle r => WithRectangle(r),
+                LineSegment lineSegment => WithLineSegment(lineSegment),
+                Triangle triangle => WithTriangle(triangle),
+                Rectangle rectangle => WithRectangle(rectangle),
+                Circle circle => WithCircle(circle),
                 _ => false
             };
         }
-        public abstract double GetArea();
-        protected abstract bool WithLineSegment(LineSegment line);
-        protected abstract bool WithTriangle(Triangle tri);
-        protected abstract bool WithRectangle(Rectangle rec);
+        public abstract double GetSquare();
+        protected abstract bool WithLineSegment(LineSegment lineSegment);
+        protected abstract bool WithTriangle(Triangle triangle);
+        protected abstract bool WithRectangle(Rectangle rectangle);
         protected abstract bool WithCircle(Circle circle);
     }
 }

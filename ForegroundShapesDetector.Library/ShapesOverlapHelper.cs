@@ -4,7 +4,7 @@ using ForegroundShapesDetector.Library.Models.Shapes;
 
 namespace ForegroundShapesDetector.Library
 {
-    public class ShapesOverlapHelper
+    public static class ShapesOverlapHelper
     {
         public static bool LineSegmentWithLineSegment(LineSegment line1, LineSegment line2)
         {
@@ -36,10 +36,10 @@ namespace ForegroundShapesDetector.Library
             if (CheckSidesIntersection(triangle1, triangle2))
                 return true;
 
-            if (PointInTriangle(triangle2.A, triangle1.A, triangle1.B, triangle1.C))
+            if (CheckPointInTriangle(triangle2.A, triangle1))
                 return true;
 
-            if (PointInTriangle(triangle1.A, triangle2.A, triangle2.B, triangle2.C))
+            if (CheckPointInTriangle(triangle1.A, triangle2))
                 return true;
 
             return false;
@@ -50,10 +50,10 @@ namespace ForegroundShapesDetector.Library
             if (CheckSidesIntersection(triangle, rectangle))
                 return true;
 
-            if (PointInRectangle(rectangle, triangle.A))
+            if (CheckPointInRectangle(triangle.A, rectangle))
                 return true;
 
-            if (PointInTriangle(rectangle.TopLeftPoint, triangle.A, triangle.B, triangle.C))
+            if (CheckPointInTriangle(rectangle.TopLeftPoint, triangle))
                 return true;
 
             return false;
@@ -64,10 +64,10 @@ namespace ForegroundShapesDetector.Library
             if (CheckSidesIntersection(rectangle1, rectangle2))
                 return true;
 
-            if (PointInRectangle(rectangle2, rectangle1.TopLeftPoint))
+            if (CheckPointInRectangle(rectangle1.TopLeftPoint, rectangle2))
                 return true;
 
-            if (PointInRectangle(rectangle1, rectangle2.TopLeftPoint))
+            if (CheckPointInRectangle(rectangle2.TopLeftPoint, rectangle1))
                 return true;
 
             return false;
@@ -136,9 +136,9 @@ namespace ForegroundShapesDetector.Library
 
         private static bool CheckSidesIntersection(IHasSides shape1, IHasSides shape2)
         {
-            for (int i = 0; i < shape1.Sides.Length; i++)
-                for (int j = 0; j < shape2.Sides.Length; j++)
-                    if (LineSegmentWithLineSegment(shape1.Sides[i], shape2.Sides[j]))
+            foreach (var side1 in shape1.Sides)
+                foreach (var side2 in shape2.Sides)
+                    if (LineSegmentWithLineSegment(side1, side2))
                         return true;
 
             return false;
@@ -163,7 +163,7 @@ namespace ForegroundShapesDetector.Library
             return false;
         }
 
-        private static bool PointInRectangle(Rectangle rectangle, Point point)
+        private static bool CheckPointInRectangle(Point point, Rectangle rectangle)
         {
             if (rectangle.TopLeftPoint.X < point.X && point.X < rectangle.TopLeftPoint.X + rectangle.Width &&
                 rectangle.TopLeftPoint.Y < point.Y && point.Y < rectangle.TopLeftPoint.Y + rectangle.Height)
@@ -172,14 +172,14 @@ namespace ForegroundShapesDetector.Library
             return false;
         }
 
-        private static bool PointInTriangle(Point point, Point t1, Point t2, Point t3)
+        private static bool CheckPointInTriangle(Point point, Triangle triangle)
         {
             double d1, d2, d3;
             bool hasNegative, hasPositive;
 
-            d1 = Sign(point, t1, t2);
-            d2 = Sign(point, t2, t3);
-            d3 = Sign(point, t3, t1);
+            d1 = Sign(point, triangle.A, triangle.B);
+            d2 = Sign(point, triangle.A, triangle.C);
+            d3 = Sign(point, triangle.C, triangle.A);
 
             hasNegative = (d1 < 0) || (d2 < 0) || (d3 < 0);
             hasPositive = (d1 > 0) || (d2 > 0) || (d3 > 0);

@@ -66,7 +66,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
                 => sides = value;
         }
 
-        public sealed override double GetArea()
+        public sealed override double GetSquare()
         {
             return Math.Abs((A.X * (B.Y - C.Y)
                            + B.X * (C.Y - A.Y)
@@ -88,7 +88,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
 
         private void CheckTriangleIsValid()
         {
-            double triangleArea = GetArea();
+            double triangleArea = GetSquare();
 
             if (triangleArea == 0)
                 throw new ArgumentException("Invalid triangle");

@@ -48,7 +48,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
                 => sides = value;
         }
 
-        public sealed override double GetArea()
+        public sealed override double GetSquare()
         {
             return 0;
         }

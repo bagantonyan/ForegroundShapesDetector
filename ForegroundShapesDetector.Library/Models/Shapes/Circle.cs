@@ -35,7 +35,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
             }
         }
 
-        public override double GetArea()
+        public override double GetSquare()
         {
             return Math.PI * Math.Pow(Radius, 2);
         }

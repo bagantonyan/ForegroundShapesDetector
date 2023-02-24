@@ -7,17 +7,37 @@ namespace ForegroundShapesDetector.ConsoleClient
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Point p1 = new Point(6, 9);
-            Point p2 = new Point(5, 7);
-            Point c = new Point(8, 8);
+            Point a1 = new Point(5, 8);
+            Point a2 = new Point(8, 10);
+            ShapeBase line1 = new LineSegment(a1, a2);
 
-            ShapeBase lineTest = new LineSegment(p1, p2);
+            Point b1 = new Point(7, 4);
+            Point b2 = new Point(9, 8);
+            Point b3 = new Point(12, 5);
+            ShapeBase triangle1 = new Triangle(b1, b2, b3);
 
-            Circle circle = new Circle(c, 4);
+            Point c1 = new Point(11, 7);
+            ShapeBase rectangle1 = new Rectangle(c1, 4, 3);
 
-            Console.WriteLine(circle.CheckOverlap(lineTest));
+            Point d1 = new Point(1, 7);
+            ShapeBase rectangle2 = new Rectangle(d1, 3, 3);
+
+            Point e1 = new Point(3, 3);
+            ShapeBase circle1 = new Circle(e1, 2);
+
+            List<ShapeBase> shapes = new List<ShapeBase>
+            {
+                line1, triangle1, rectangle1, rectangle2, circle1
+            };
+
+            var resultSync = ShapesDetector.GetForegroundShapesSync(shapes, minimalSquare: 12);
+
+            await foreach (var shape in ShapesDetector.GetForegroundShapesAsync(shapes, 1))
+            {
+                Console.WriteLine(shape.GetType());
+            }
         }
     }
 }
