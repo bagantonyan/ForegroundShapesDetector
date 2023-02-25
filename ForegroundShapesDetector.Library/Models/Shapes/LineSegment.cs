@@ -2,7 +2,7 @@
 
 namespace ForegroundShapesDetector.Library.Models.Shapes
 {
-    public class LineSegment : ShapeBase, IHasSides
+    public class LineSegment : ShapeBase, IShapeHasSides
     {
         private Point a;
         private Point b;
@@ -20,7 +20,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
 
         public Point A
         {
-            get { return a; }
+            get => a;
             private set
             {
                 if (value is null)
@@ -31,7 +31,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
 
         public Point B
         {
-            get { return b; }
+            get => b;
             private set
             {
                 if (value is null)
@@ -48,22 +48,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
                 => sides = value;
         }
 
-        public sealed override double GetSquare()
-        {
-            return 0;
-        }
-
-        protected sealed override bool WithLineSegment(LineSegment line)
-            => ShapesOverlapHelper.LineSegmentWithLineSegment(this, line);
-
-        protected sealed override bool WithTriangle(Triangle triangle)
-            => ShapesOverlapHelper.LineSegmentWithTriangle(this, triangle);
-
-        protected sealed override bool WithRectangle(Rectangle rectangle)
-            => ShapesOverlapHelper.LineSegmentWithRectangle(this, rectangle);
-
-        protected sealed override bool WithCircle(Circle circle)
-            => ShapesOverlapHelper.CircleWithLineSegment(this, circle);
+        public sealed override double GetSquare() => 0;
 
         private void CheckLineIsValid()
         {

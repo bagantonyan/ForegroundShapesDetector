@@ -3,6 +3,7 @@ using ForegroundShapesDetector.Library;
 using ForegroundShapesDetector.Library.Models;
 using ForegroundShapesDetector.Library.Models.Abstractions;
 using ForegroundShapesDetector.Library.Models.Shapes;
+using ForegroundShapesDetector.Library.Services.Implementations;
 
 namespace ForegroundShapesDetector.ConsoleClient
 {
@@ -10,9 +11,10 @@ namespace ForegroundShapesDetector.ConsoleClient
     {
         static async Task Main(string[] args)
         {
-            var generatedShapes = ShapesGenerator.GetGeneratedShapes(20).ToList();
 
-            var resultSyncForGen = ShapesDetector.GetForegroundShapesSync(generatedShapes);
+            var generatedShapes = ShapesGenerator.GetGeneratedShapes(30).ToList();
+
+            //var resultSyncForGen = ShapesDetector.GetForegroundShapesSync(generatedShapes);
 
             Point k1 = new Point(5, 5);
             Point k2 = new Point(5, 5);
@@ -49,12 +51,17 @@ namespace ForegroundShapesDetector.ConsoleClient
                 line1, triangle1, rectangle1, rectangle2, circle1
             };
 
-            var resultSync = ShapesDetector.GetForegroundShapesSync(shapes, minimalSquare: 12);
+            OverlapCheckerService helper = new OverlapCheckerService();
 
-            await foreach (var shape in ShapesDetector.GetForegroundShapesAsync(shapes, 1))
-            {
-                Console.WriteLine(shape.GetType());
-            }
+            var result = helper.CheckOverlap(circle1, line1);
+
+
+            //var resultSync = ShapesDetector.GetForegroundShapesSync(shapes, minimalSquare: 12);
+
+            //await foreach (var shape in ShapesDetector.GetForegroundShapesAsync(generatedShapes))
+            //{
+            //    Console.WriteLine(shape.GetType());
+            //}
         }
     }
 }

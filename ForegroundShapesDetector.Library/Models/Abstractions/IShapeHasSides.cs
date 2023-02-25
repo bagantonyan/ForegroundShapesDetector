@@ -2,7 +2,7 @@
 
 namespace ForegroundShapesDetector.Library.Models.Abstractions
 {
-    public interface IHasSides
+    public interface IShapeHasSides
     {
         LineSegment[] Sides { get; }
     }

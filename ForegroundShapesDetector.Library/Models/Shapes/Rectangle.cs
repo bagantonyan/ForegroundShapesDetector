@@ -2,7 +2,7 @@
 
 namespace ForegroundShapesDetector.Library.Models.Shapes
 {
-    public class Rectangle : ShapeBase, IHasSides
+    public class Rectangle : ShapeBase, IShapeHasSides
     {
         private Point topLeftPoint;
         private double width;
@@ -28,7 +28,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
 
         public Point TopLeftPoint
         {
-            get { return topLeftPoint; }
+            get => topLeftPoint;
             set
             {
                 if (value is null)
@@ -39,7 +39,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
 
         public double Width
         {
-            get { return width; }
+            get => width;
             private set
             {
                 if (value <= 0)
@@ -50,7 +50,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
 
         public double Height
         {
-            get { return height; }
+            get => height;
             private set
             {
                 if (value <= 0)
@@ -67,21 +67,6 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
                 => sides = value;
         }
 
-        public sealed override double GetSquare()
-        {
-            return Width * Height;
-        }
-
-        protected sealed override bool WithLineSegment(LineSegment line)
-            => ShapesOverlapHelper.LineSegmentWithRectangle(line, this);
-
-        protected sealed override bool WithTriangle(Triangle triangle)
-            => ShapesOverlapHelper.TriangleWithRectangle(triangle, this);
-
-        protected sealed override bool WithRectangle(Rectangle rectangle)
-            => ShapesOverlapHelper.RectangleWithRectangle(this, rectangle);
-
-        protected sealed override bool WithCircle(Circle circle)
-            => ShapesOverlapHelper.CircleWithRectangle(circle, this);
+        public sealed override double GetSquare() => Width * Height;
     }
 }

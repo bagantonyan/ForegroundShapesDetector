@@ -15,7 +15,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
 
         public Point Center
         {
-            get { return center; }
+            get => center;
             private set
             {
                 if (value is null)
@@ -26,7 +26,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
 
         public double Radius
         {
-            get { return radius; }
+            get => radius;
             private set
             {
                 if (value <= 0)
@@ -35,21 +35,6 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
             }
         }
 
-        public override double GetSquare()
-        {
-            return Math.PI * Math.Pow(Radius, 2);
-        }
-
-        protected sealed override bool WithLineSegment(LineSegment line)
-            => ShapesOverlapHelper.CircleWithLineSegment(line, this);
-
-        protected sealed override bool WithTriangle(Triangle triangle)
-            => ShapesOverlapHelper.CircleWithTriangle(this, triangle);
-
-        protected sealed override bool WithRectangle(Rectangle rectangle)
-            => ShapesOverlapHelper.CircleWithRectangle(this, rectangle);
-
-        protected sealed override bool WithCircle(Circle circle)
-            => ShapesOverlapHelper.CircleWithCircle(this, circle);
+        public override double GetSquare() => Math.PI * Math.Pow(Radius, 2);
     }
 }

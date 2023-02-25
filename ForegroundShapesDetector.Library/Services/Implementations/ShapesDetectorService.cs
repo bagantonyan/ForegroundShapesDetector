@@ -1,10 +1,19 @@
 ﻿using ForegroundShapesDetector.Library.Models.Abstractions;
+using ForegroundShapesDetector.Library.Services.Interfaces;
 
-namespace ForegroundShapesDetector.Library
+namespace ForegroundShapesDetector.Library.Services.Implementations
 {
-    public static class ShapesDetector
+    public class ShapesDetectorService : IShapesDetectorService
     {
-        public static IEnumerable<ShapeBase> GetForegroundShapesSync(List<ShapeBase> shapes, int? count = null, double? minimalSquare = null)
+        private readonly IOverlapCheckerService _overlapChecker;
+
+        public ShapesDetectorService(
+            IOverlapCheckerService overlapChecker)
+        {
+            _overlapChecker = overlapChecker;
+        }
+
+        public IEnumerable<int> GetForegroundShapesSync(List<ShapeBase> shapes, int? count = null, double? minimalSquare = null)
         {
             if (shapes is null)
                 throw new ArgumentException("Shapes list can't be null");
@@ -18,12 +27,12 @@ namespace ForegroundShapesDetector.Library
                     throw new ArgumentException("Count must be greater than 0");
 
                 if (count == 1)
-                    return new List<ShapeBase>() { shapes[^1] };
+                    return new List<int>() { shapes[^1].Id };
             }
 
-            List<ShapeBase> foregroundShapes = new()
+            var foregroundShapeIds = new List<int>
             {
-                shapes[^1]
+                shapes[^1].Id
             };
 
             for (int i = shapes.Count - 2; i >= 0; i--)
@@ -35,16 +44,16 @@ namespace ForegroundShapesDetector.Library
                     if (minimalSquare > shapes[i].GetSquare())
                         continue;
 
-                foregroundShapes.Add(shapes[i]);
+                foregroundShapeIds.Add(shapes[i].Id);
 
-                if (count is not null && foregroundShapes.Count == count)
-                    return foregroundShapes;
+                if (count is not null && foregroundShapeIds.Count == count)
+                    return foregroundShapeIds;
             }
 
-            return foregroundShapes;
+            return foregroundShapeIds;
         }
 
-        public static async IAsyncEnumerable<ShapeBase> GetForegroundShapesAsync(List<ShapeBase> shapes, int? count = null, double? minimalSquare = null)
+        public async IAsyncEnumerable<int> GetForegroundShapesAsync(List<ShapeBase> shapes, int? count = null, double? minimalSquare = null)
         {
             if (shapes is null)
                 throw new ArgumentException("Shapes list can't be null");
@@ -59,18 +68,18 @@ namespace ForegroundShapesDetector.Library
 
                 if (count == 1)
                 {
-                    yield return shapes[^1];
+                    yield return shapes[^1].Id;
                     yield break;
                 }
             }
 
-            yield return shapes[^1];
+            yield return shapes[^1].Id;
 
             int foregroundsCount = 1;
 
             for (int i = shapes.Count - 2; i >= 0; i--)
             {
-                if (!IsForeground(shapes.GetRange(i, shapes.Count - i))) 
+                if (!IsForeground(shapes.GetRange(i, shapes.Count - i)))
                     continue;
 
                 if (minimalSquare is not null)
@@ -79,18 +88,18 @@ namespace ForegroundShapesDetector.Library
 
                 await Task.Delay(1000);
 
-                yield return shapes[i];
+                yield return shapes[i].Id;
 
                 if (count is not null && ++foregroundsCount == count)
                     yield break;
             }
         }
 
-        private static bool IsForeground(List<ShapeBase> shapes)
+        private bool IsForeground(List<ShapeBase> shapes)
         {
-            ShapeBase current = shapes.First();
+            var current = shapes.First();
 
-            return shapes.Skip(1).ToList().All(shape => !current.CheckOverlap(shape));
+            return shapes.Skip(1).ToList().All(shape => !_overlapChecker.CheckOverlap(current, shape));
         }
     }
 }

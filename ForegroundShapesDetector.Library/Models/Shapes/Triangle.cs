@@ -2,7 +2,7 @@
 
 namespace ForegroundShapesDetector.Library.Models.Shapes
 {
-    public class Triangle : ShapeBase, IHasSides
+    public class Triangle : ShapeBase, IShapeHasSides
     {
         private Point a;
         private Point b;
@@ -27,7 +27,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
 
         public Point A
         {
-            get { return a; }
+            get => a;
             private set
             {
                 if (value is null)
@@ -38,7 +38,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
 
         public Point B
         {
-            get { return b; }
+            get => b;
             private set
             {
                 if (value is null)
@@ -49,7 +49,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
 
         public Point C
         {
-            get { return c; }
+            get => c;
             private set
             {
                 if (value is null)
@@ -60,31 +60,17 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
 
         public LineSegment[] Sides
         {
-            get 
+            get
                 => (LineSegment[])sides.Clone();
-            private set 
+            private set
                 => sides = value;
         }
 
         public sealed override double GetSquare()
-        {
-            return Math.Abs((A.X * (B.Y - C.Y)
-                           + B.X * (C.Y - A.Y)
-                           + C.X * (A.Y - B.Y))
-                           / 2);
-        }
-
-        protected sealed override bool WithLineSegment(LineSegment line)
-            => ShapesOverlapHelper.LineSegmentWithTriangle(line, this);
-
-        protected sealed override bool WithTriangle(Triangle triangle)
-            => ShapesOverlapHelper.TriangleWithTriangle(this, triangle);
-
-        protected sealed override bool WithRectangle(Rectangle rectangle)
-            => ShapesOverlapHelper.TriangleWithRectangle(this, rectangle);
-
-        protected sealed override bool WithCircle(Circle circle)
-            => ShapesOverlapHelper.CircleWithTriangle(circle, this);
+            => Math.Abs((A.X * (B.Y - C.Y)
+                       + B.X * (C.Y - A.Y)
+                       + C.X * (A.Y - B.Y))
+                       / 2);
 
         private void CheckTriangleIsValid()
         {
