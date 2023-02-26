@@ -15,15 +15,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
             Width = width;
             Height = height;
 
-            Sides = new LineSegment[4]
-            {
-                new LineSegment(topLeftPoint, new Point(topLeftPoint.X + width, topLeftPoint.Y)),
-                new LineSegment(new Point(topLeftPoint.X + width, topLeftPoint.Y), 
-                                new Point(topLeftPoint.X + width, topLeftPoint.Y - height)),
-                new LineSegment(new Point(topLeftPoint.X + width, topLeftPoint.Y - height), 
-                                new Point(topLeftPoint.X, topLeftPoint.Y - height)),
-                new LineSegment(new Point(topLeftPoint.X, topLeftPoint.Y - height), topLeftPoint)
-            };
+            SetSides();
         }
 
         public Point TopLeftPoint
@@ -68,5 +60,20 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
         }
 
         public sealed override double GetSquare() => Width * Height;
+
+        private void SetSides()
+        {
+            Point b = new Point(topLeftPoint.X + Width, topLeftPoint.Y);
+            Point c = new Point(b.X, b.Y - Height);
+            Point d = new Point(c.X - Width, c.Y);
+
+            Sides = new LineSegment[4]
+            {
+                new LineSegment(topLeftPoint, b),
+                new LineSegment(b, c),
+                new LineSegment(c, d),
+                new LineSegment(d, topLeftPoint),
+            };
+        }
     }
 }

@@ -20,4 +20,8 @@
     <ProjectReference Include="..\ForegroundShapesDetector.Library\ForegroundShapesDetector.Library.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ModelTests\" />
+  </ItemGroup>
+
 </Project>

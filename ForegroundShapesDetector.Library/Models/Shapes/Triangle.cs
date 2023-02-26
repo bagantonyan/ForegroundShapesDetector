@@ -16,13 +16,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
             C = c;
 
             CheckTriangleIsValid();
-
-            Sides = new LineSegment[3]
-            {
-                new LineSegment(a, b),
-                new LineSegment(a, c),
-                new LineSegment(b, c),
-            };
+            SetSides();
         }
 
         public Point A
@@ -78,6 +72,16 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
 
             if (triangleArea == 0)
                 throw new ArgumentException("Invalid triangle");
+        }
+
+        private void SetSides()
+        {
+            Sides = new LineSegment[3]
+            {
+                new LineSegment(A, B),
+                new LineSegment(B, C),
+                new LineSegment(C, A),
+            };
         }
     }
 }

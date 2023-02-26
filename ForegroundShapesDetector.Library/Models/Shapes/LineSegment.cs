@@ -14,8 +14,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
             B = b;
 
             CheckLineIsValid();
-
-            Sides = new LineSegment[1] { this };
+            SetSides();
         }
 
         public Point A
@@ -55,5 +54,7 @@ namespace ForegroundShapesDetector.Library.Models.Shapes
             if (a.X == b.X && a.Y == b.Y)
                 throw new ArgumentException("Invalid line");
         }
+
+        private void SetSides() => Sides = new LineSegment[1] { this };
     }
 }
