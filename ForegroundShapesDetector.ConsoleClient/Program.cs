@@ -3,7 +3,9 @@ using ForegroundShapesDetector.Library;
 using ForegroundShapesDetector.Library.Models;
 using ForegroundShapesDetector.Library.Models.Abstractions;
 using ForegroundShapesDetector.Library.Models.Shapes;
+using ForegroundShapesDetector.Library.Services.Extensions;
 using ForegroundShapesDetector.Library.Services.Implementations;
+using ForegroundShapesDetector.Library.Services.Interfaces;
 
 namespace ForegroundShapesDetector.ConsoleClient
 {
@@ -13,6 +15,15 @@ namespace ForegroundShapesDetector.ConsoleClient
         {
 
             var generatedShapes = ShapesGenerator.GetGeneratedShapes(30).ToList();
+            IOverlapCheckerService overlapChecker = new OverlapCheckerService();
+            IShapesDetectorService shapesDetector = new ShapesDetectorService(overlapChecker);
+
+            var result = shapesDetector.GetForegroundShapesSync(generatedShapes).ToList();
+
+            await foreach (var shape in shapesDetector.GetForegroundShapesAsync(generatedShapes))
+            {
+                
+            }
 
             //var resultSyncForGen = ShapesDetector.GetForegroundShapesSync(generatedShapes);
 
@@ -53,7 +64,7 @@ namespace ForegroundShapesDetector.ConsoleClient
 
             OverlapCheckerService helper = new OverlapCheckerService();
 
-            var result = helper.CheckOverlap(circle1, line1);
+            //var result = helper.CheckOverlap(circle1, line1);
 
 
             //var resultSync = ShapesDetector.GetForegroundShapesSync(shapes, minimalSquare: 12);

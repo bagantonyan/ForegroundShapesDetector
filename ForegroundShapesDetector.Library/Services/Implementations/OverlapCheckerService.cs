@@ -8,36 +8,36 @@ namespace ForegroundShapesDetector.Library.Services.Implementations
 {
     public class OverlapCheckerService : IOverlapCheckerService
     {
-        private readonly Dictionary<string, Func<ShapeBase, ShapeBase, bool>> pairOverlapLogics;
+        private readonly Dictionary<string, Func<ShapeBase, ShapeBase, bool>> shapesPairOverlapLogics;
 
         public OverlapCheckerService()
         {
-            pairOverlapLogics = new Dictionary<string, Func<ShapeBase, ShapeBase, bool>>();
+            shapesPairOverlapLogics = new Dictionary<string, Func<ShapeBase, ShapeBase, bool>>();
 
-            pairOverlapLogics[ShapePairs.LineSegmentLineSegment] = LineSegmentWithLineSegment;
-            pairOverlapLogics[ShapePairs.LineSegmentTriangle] = LineSegmentWithTriangle;
-            pairOverlapLogics[ShapePairs.LineSegmentRectangle] = LineSegmentWithRectangle;
-            pairOverlapLogics[ShapePairs.LineSegmentCircle] = LineSegmentWithCircle;
-            pairOverlapLogics[ShapePairs.TriangleTriangle] = TriangleWithTriangle;
-            pairOverlapLogics[ShapePairs.TriangleRectangle] = TriangleWithRectangle;
-            pairOverlapLogics[ShapePairs.TriangleCircle] = TriangleWithCircle;
-            pairOverlapLogics[ShapePairs.RectangleRectangle] = RectangleWithRectangle;
-            pairOverlapLogics[ShapePairs.RectangleCircle] = RectangleWithCircle;
-            pairOverlapLogics[ShapePairs.CircleCircle] = CircleWithCircle;
+            shapesPairOverlapLogics[ShapePairs.LineSegmentLineSegment] = LineSegmentWithLineSegment;
+            shapesPairOverlapLogics[ShapePairs.LineSegmentTriangle] = LineSegmentWithTriangle;
+            shapesPairOverlapLogics[ShapePairs.LineSegmentRectangle] = LineSegmentWithRectangle;
+            shapesPairOverlapLogics[ShapePairs.LineSegmentCircle] = LineSegmentWithCircle;
+            shapesPairOverlapLogics[ShapePairs.TriangleTriangle] = TriangleWithTriangle;
+            shapesPairOverlapLogics[ShapePairs.TriangleRectangle] = TriangleWithRectangle;
+            shapesPairOverlapLogics[ShapePairs.TriangleCircle] = TriangleWithCircle;
+            shapesPairOverlapLogics[ShapePairs.RectangleRectangle] = RectangleWithRectangle;
+            shapesPairOverlapLogics[ShapePairs.RectangleCircle] = RectangleWithCircle;
+            shapesPairOverlapLogics[ShapePairs.CircleCircle] = CircleWithCircle;
 
-            pairOverlapLogics[ShapePairs.TriangleLineSegment] = (shape1, shape2) => LineSegmentWithTriangle(shape2, shape1);
-            pairOverlapLogics[ShapePairs.RectangleLineSegment] = (shape1, shape2) => LineSegmentWithRectangle(shape2, shape1);
-            pairOverlapLogics[ShapePairs.RectangleTriangle] = (shape1, shape2) => TriangleWithRectangle(shape2, shape1);
-            pairOverlapLogics[ShapePairs.CircleLineSegment] = (shape1, shape2) => LineSegmentWithCircle(shape2, shape1);
-            pairOverlapLogics[ShapePairs.CircleTriangle] = (shape1, shape2) => TriangleWithCircle(shape2, shape1);
-            pairOverlapLogics[ShapePairs.CircleRectangle] = (shape1, shape2) => RectangleWithCircle(shape2, shape1);
+            shapesPairOverlapLogics[ShapePairs.TriangleLineSegment] = (shape1, shape2) => LineSegmentWithTriangle(shape2, shape1);
+            shapesPairOverlapLogics[ShapePairs.RectangleLineSegment] = (shape1, shape2) => LineSegmentWithRectangle(shape2, shape1);
+            shapesPairOverlapLogics[ShapePairs.RectangleTriangle] = (shape1, shape2) => TriangleWithRectangle(shape2, shape1);
+            shapesPairOverlapLogics[ShapePairs.CircleLineSegment] = (shape1, shape2) => LineSegmentWithCircle(shape2, shape1);
+            shapesPairOverlapLogics[ShapePairs.CircleTriangle] = (shape1, shape2) => TriangleWithCircle(shape2, shape1);
+            shapesPairOverlapLogics[ShapePairs.CircleRectangle] = (shape1, shape2) => RectangleWithCircle(shape2, shape1);
         }
 
         public bool CheckOverlap(ShapeBase shape1, ShapeBase shape2)
         {
             var pairName = shape1.GetType().Name + shape2.GetType().Name;
 
-            if (pairOverlapLogics.TryGetValue(pairName, out Func<ShapeBase, ShapeBase, bool> overlapCheker))
+            if (shapesPairOverlapLogics.TryGetValue(pairName, out Func<ShapeBase, ShapeBase, bool> overlapCheker))
                 return overlapCheker(shape1, shape2);
 
             throw new NotImplementedException("Overlap checking logic daoes not implemented for this pair");
@@ -70,15 +70,23 @@ namespace ForegroundShapesDetector.Library.Services.Implementations
             var line = (LineSegment)shape1;
             var triangle = (Triangle)shape2;
 
-            return CheckSidesIntersection(line, triangle);
+            if (CheckSidesIntersection(line, triangle)
+             || CheckPointInTriangle(line.A, triangle))
+                return true;
+
+            return false;
         }
 
         private bool LineSegmentWithRectangle(ShapeBase shape1, ShapeBase shape2)
         {
             var line = (LineSegment)shape1;
-            var rectangle = (Triangle)shape2;
+            var rectangle = (Rectangle)shape2;
 
-            return CheckSidesIntersection(line, rectangle);
+            if (CheckSidesIntersection(line, rectangle)
+             || CheckPointInRectangle(line.A, rectangle))
+                return true;
+
+            return false;
         }
 
         private bool LineSegmentWithCircle(ShapeBase shape1, ShapeBase shape2)
@@ -121,13 +129,9 @@ namespace ForegroundShapesDetector.Library.Services.Implementations
             var triangle1 = (Triangle)shape1;
             var triangle2 = (Triangle)shape2;
 
-            if (CheckSidesIntersection(triangle1, triangle2))
-                return true;
-
-            if (CheckPointInTriangle(triangle2.A, triangle1))
-                return true;
-
-            if (CheckPointInTriangle(triangle1.A, triangle2))
+            if (CheckSidesIntersection(triangle1, triangle2)
+             || CheckPointInTriangle(triangle2.A, triangle1)
+             || CheckPointInTriangle(triangle1.A, triangle2))
                 return true;
 
             return false;
@@ -138,13 +142,9 @@ namespace ForegroundShapesDetector.Library.Services.Implementations
             var triangle = (Triangle)shape1;
             var rectangle = (Rectangle)shape2;
 
-            if (CheckSidesIntersection(triangle, rectangle))
-                return true;
-
-            if (CheckPointInRectangle(triangle.A, rectangle))
-                return true;
-
-            if (CheckPointInTriangle(rectangle.TopLeftPoint, triangle))
+            if (CheckSidesIntersection(triangle, rectangle)
+             || CheckPointInRectangle(triangle.A, rectangle)
+             || CheckPointInTriangle(rectangle.TopLeftPoint, triangle))
                 return true;
 
             return false;
@@ -159,6 +159,9 @@ namespace ForegroundShapesDetector.Library.Services.Implementations
                 if (LineSegmentWithCircle(side, circle))
                     return true;
 
+            if (CheckPointInTriangle(circle.Center, triangle))
+                return true;
+
             return false;
         }
 
@@ -167,13 +170,9 @@ namespace ForegroundShapesDetector.Library.Services.Implementations
             var rectangle1 = (Rectangle)shape1;
             var rectangle2 = (Rectangle)shape2;
 
-            if (CheckSidesIntersection(rectangle1, rectangle2))
-                return true;
-
-            if (CheckPointInRectangle(rectangle1.TopLeftPoint, rectangle2))
-                return true;
-
-            if (CheckPointInRectangle(rectangle2.TopLeftPoint, rectangle1))
+            if (CheckSidesIntersection(rectangle1, rectangle2)
+             || CheckPointInRectangle(rectangle1.TopLeftPoint, rectangle2)
+             || CheckPointInRectangle(rectangle2.TopLeftPoint, rectangle1))
                 return true;
 
             return false;
@@ -187,6 +186,9 @@ namespace ForegroundShapesDetector.Library.Services.Implementations
             foreach (var side in rectangle.Sides)
                 if (LineSegmentWithCircle(side, circle))
                     return true;
+
+            if (CheckPointInRectangle(circle.Center, rectangle))
+                return true;
 
             return false;
         }
@@ -221,7 +223,7 @@ namespace ForegroundShapesDetector.Library.Services.Implementations
             bool hasNegative, hasPositive;
 
             d1 = Sign(point, triangle.A, triangle.B);
-            d2 = Sign(point, triangle.A, triangle.C);
+            d2 = Sign(point, triangle.B, triangle.C);
             d3 = Sign(point, triangle.C, triangle.A);
 
             hasNegative = (d1 < 0) || (d2 < 0) || (d3 < 0);
@@ -233,7 +235,7 @@ namespace ForegroundShapesDetector.Library.Services.Implementations
         private bool CheckPointInRectangle(Point point, Rectangle rectangle)
         {
             if (rectangle.TopLeftPoint.X < point.X && point.X < rectangle.TopLeftPoint.X + rectangle.Width &&
-                rectangle.TopLeftPoint.Y < point.Y && point.Y < rectangle.TopLeftPoint.Y + rectangle.Height)
+                rectangle.TopLeftPoint.Y > point.Y && point.Y > rectangle.TopLeftPoint.Y - rectangle.Height)
                 return true;
 
             return false;
