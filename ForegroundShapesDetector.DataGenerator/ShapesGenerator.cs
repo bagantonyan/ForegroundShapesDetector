@@ -6,7 +6,7 @@ namespace ForegroundShapesDetector.DataGenerator
 {
     public class ShapesGenerator
     {
-        public static IEnumerable<ShapeBase> GetGeneratedShapes(int count) 
+        public static IEnumerable<ShapeBase> GetGeneratedShapes(int count, double minShapeSize, double maxShapeSize, int panelWidth, int panelHeight) 
         {
             List<ShapeBase> shapes = new List<ShapeBase>();
 
