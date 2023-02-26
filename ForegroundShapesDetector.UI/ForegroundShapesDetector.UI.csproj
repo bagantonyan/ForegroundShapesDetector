@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Spatial" Version="7.14.1" />
+    <ProjectReference Include="..\ForegroundShapesDetector.DataGenerator\ForegroundShapesDetector.DataGenerator.csproj" />
   </ItemGroup>
 
 </Project>

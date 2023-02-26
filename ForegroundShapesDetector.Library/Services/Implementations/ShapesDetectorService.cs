@@ -86,6 +86,8 @@ namespace ForegroundShapesDetector.Library.Services.Implementations
                     if (minimalSquare > shapes[i].GetSquare())
                         continue;
 
+                await Task.Delay(1000);
+
                 yield return shapes[i].Id;
 
                 if (count is not null && ++foregroundsCount == count)

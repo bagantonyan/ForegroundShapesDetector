@@ -6,8 +6,20 @@ namespace ForegroundShapesDetector.DataGenerator
 {
     public class ShapesGenerator
     {
-        public static IEnumerable<ShapeBase> GetGeneratedShapes(int count, double minShapeSize, double maxShapeSize, int panelWidth, int panelHeight) 
+        private static double _panelWidth;
+        private static double _panelHeight;
+        private static double _minShapeSize;
+        private static double _maxShapeSize;
+        private static Random _random = new Random();
+
+        public static IEnumerable<ShapeBase> GetGeneratedShapes(
+            int count, double panelWidth, double panelHeight, double minShapeSize, double maxShapeSize)
         {
+            _panelWidth = panelWidth;
+            _panelHeight = panelHeight;
+            _minShapeSize = minShapeSize;
+            _maxShapeSize = maxShapeSize;
+
             List<ShapeBase> shapes = new List<ShapeBase>();
 
             for (int i = 0; i < count; i++)
@@ -52,16 +64,19 @@ namespace ForegroundShapesDetector.DataGenerator
         private static ShapeTypes GetRandomShapeType()
         {
             var values = Enum.GetValues(typeof(ShapeTypes));
-            var random = new Random();
-            return (ShapeTypes)values.GetValue(random.Next(values.Length));
+            return (ShapeTypes)values.GetValue(_random.Next(values.Length));
         }
 
         private static LineSegment GetRandomLineSegment()
         {
-            double x1 = GetRandomDoubleInRange(0, 1000);
-            double y1 = GetRandomDoubleInRange(0, 1000);
-            double x2 = GetRandomDoubleInRange(0, 1000);
-            double y2 = GetRandomDoubleInRange(0, 1000);
+            double x1 = GetRandomDoubleInRange(0, _panelWidth);
+            double y1 = GetRandomDoubleInRange(0, _panelHeight);
+
+            double lineLength = GetRandomDoubleInRange(_minShapeSize, _maxShapeSize);
+            double lineAngle = GetRandomDoubleInRange(0, 2 * Math.PI);
+
+            double x2 = x1 + (lineLength * Math.Cos(lineAngle));
+            double y2 = y1 + (lineLength * Math.Sin(lineAngle));
 
             Point p1 = new Point(x1, y1);
             Point p2 = new Point(x2, y2);
@@ -77,14 +92,16 @@ namespace ForegroundShapesDetector.DataGenerator
             return lineSegment;
         }
 
-        private static Triangle GetRandomTriangle() 
+        private static Triangle GetRandomTriangle()
         {
-            double x1 = GetRandomDoubleInRange(0, 1000);
-            double y1 = GetRandomDoubleInRange(0, 1000);
-            double x2 = GetRandomDoubleInRange(0, 1000);
-            double y2 = GetRandomDoubleInRange(0, 1000);
-            double x3 = GetRandomDoubleInRange(0, 1000);
-            double y3 = GetRandomDoubleInRange(0, 1000);
+            double x1 = GetRandomDoubleInRange(0, _panelWidth);
+            double y1 = GetRandomDoubleInRange(0, _panelHeight);
+
+            double x2 = GetRandomDoubleInRange(x1 - _maxShapeSize, x1 + _maxShapeSize);
+            double y2 = GetRandomDoubleInRange(y1 - _maxShapeSize, y1 + _maxShapeSize);
+
+            double x3 = GetRandomDoubleInRange(x2 - _maxShapeSize, x2 + _maxShapeSize);
+            double y3 = GetRandomDoubleInRange(y2 - _maxShapeSize, y2 + _maxShapeSize);
 
             Point p1 = new Point(x1, y1);
             Point p2 = new Point(x2, y2);
@@ -103,13 +120,13 @@ namespace ForegroundShapesDetector.DataGenerator
 
         private static Rectangle GetRandomRectangle()
         {
-            double x = GetRandomDoubleInRange(0, 950);
-            double y = GetRandomDoubleInRange(50, 1000);
+            double x = GetRandomDoubleInRange(0, _panelWidth);
+            double y = GetRandomDoubleInRange(0, _panelHeight);
 
             Point p1 = new Point(x, y);
 
-            double width = GetRandomDoubleInRange(0, 1000 - x);
-            double height = GetRandomDoubleInRange(0, y);
+            double width = GetRandomDoubleInRange(_minShapeSize, _maxShapeSize);
+            double height = GetRandomDoubleInRange(_minShapeSize, _maxShapeSize);
 
             Rectangle rectangle = null;
 
@@ -124,16 +141,11 @@ namespace ForegroundShapesDetector.DataGenerator
 
         private static Circle GetRandomCircle()
         {
-            double x = GetRandomDoubleInRange(50, 950);
-            double y = GetRandomDoubleInRange(50, 950);
+            double x = GetRandomDoubleInRange(0, _panelWidth);
+            double y = GetRandomDoubleInRange(0, _panelHeight);
 
             Point p1 = new Point(x, y);
-
-            double minDistanceByX = Math.Min(x, 1000 - x);
-            double minDistanceByY = Math.Min(y, 1000 - y);
-            double minDistanceOfCenterFromAxis = Math.Min(minDistanceByX, minDistanceByY);
-
-            double radius = GetRandomDoubleInRange(50, minDistanceOfCenterFromAxis);
+            double radius = GetRandomDoubleInRange(_minShapeSize, _maxShapeSize);
 
             Circle circle = null;
 
@@ -146,10 +158,9 @@ namespace ForegroundShapesDetector.DataGenerator
             return circle;
         }
 
-        private static double GetRandomDoubleInRange(double min, double max) 
+        private static double GetRandomDoubleInRange(double min, double max)
         {
-            Random random = new Random();
-            var next = random.NextDouble();
+            var next = _random.NextDouble();
             return min + (next * (max - min));
         }
     }
