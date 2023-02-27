@@ -13,7 +13,11 @@ namespace ForegroundShapesDetector.DataGenerator
         private static Random _random = new Random();
 
         public static IEnumerable<ShapeBase> GetGeneratedShapes(
-            int count, double panelWidth, double panelHeight, double minShapeSize, double maxShapeSize)
+            int count, 
+            double panelWidth = 1000, 
+            double panelHeight = 1000, 
+            double minShapeSize = 50, 
+            double maxShapeSize = 150)
         {
             _panelWidth = panelWidth;
             _panelHeight = panelHeight;

@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ForegroundShapesDetector.DataGenerator\ForegroundShapesDetector.DataGenerator.csproj" />
     <ProjectReference Include="..\ForegroundShapesDetector.Library\ForegroundShapesDetector.Library.csproj" />
   </ItemGroup>
 
